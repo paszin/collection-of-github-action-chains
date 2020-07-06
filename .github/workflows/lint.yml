@@ -8,7 +8,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: fylein/python-pylint-github-action@v1
         with:
-          args: pip3 install -r RsPyTools/RsPyTools/requirements.txt && pylint --rcfile=RsPyTools/RsPyTools/.pylintrc --ignore=RsPyTools/RsPyTools/tests RsPyTools/RsPyTools/ > pylint.txt || true
+          args: pip3 install -r path/to/requirements.txt && pylint --rcfile=path/to/.pylintrc --ignore=path/to/tests path/to/files/ > pylint.txt || true
       - uses: actions/upload-artifact@v1
         with:
           name: Pylint Result
