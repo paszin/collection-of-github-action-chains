@@ -1,0 +1,33 @@
+name: Comment Coverage on Pull Request
+on: pull_request
+jobs:
+  example:
+    name: sample comment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y libspatialindex-dev
+          python -m pip install --upgrade pip
+          python -m pip install pytest pytest-cov
+          python -m pip install -r ./MeasureMesh/MeasureMesh/requirements.txt
+      - name: Test
+        run: pytest --cov=MeasureMesh/MeasureMesh --cov-report term-missing MeasureMesh/MeasureMesh/tests/ | ./ci/convert-coverage-to-md.py > cov-report.txt
+      - uses: actions/upload-artifact@v1
+        with:
+          name: cov-report.txt
+          path: cov-report.txt
+
+      - name: comment PR
+        uses: amn41/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: cov-report.txt
+          check_for_duplicate_msg: false  # OPTIONAL
