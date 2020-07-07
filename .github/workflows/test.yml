@@ -16,6 +16,6 @@ jobs:
           sudo apt-get update && sudo apt-get install -y libspatialindex-dev
           python -m pip install --upgrade pip
           python -m pip install pytest pytest-cov
-          python -m pip install -r ./MeasureMesh/MeasureMesh/requirements.txt
+          python -m pip install -r ./path/to/requirements.txt
       - name: Test
-        run: pytest --cov=MeasureMesh/MeasureMesh --cov-report=term --ignore=MeasureMesh/MeasureMesh/tests/**
+        run: pytest --cov=path/to/code --cov-report=term --ignore=path/to/tests/**
