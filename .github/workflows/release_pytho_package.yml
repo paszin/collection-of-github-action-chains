@@ -1,0 +1,32 @@
+name: Publish
+
+on:
+  push:
+    branch:
+      - 'main'
+ 
+jobs:
+  build:
+    name: Publish
+    runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup
+      run: pip3 install -r requirements.txt
+    - name: Build Wheel
+      run: cd Client && python setup.py sdist bdist_wheel && cd ..
+    - name: Get Version
+      run: |
+        export VERSION=$(python -c "from Client import Client; print(Client.__version__)" | tail -1)
+        echo "::set-env name=VERSION::$VERSION"
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "v${{ env.VERSION }}"
+        prerelease: false
+        title: "Client ${{ env.VERSION }}"
+        files: |
+            README.md
+            Client/dist/Client_thullex-*.whl
